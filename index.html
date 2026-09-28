@@ -20,13 +20,13 @@
 <script>
 (function(){var PW="sky2026";
 function unlock(){var s=document.getElementById('gate-style');if(s)s.remove();var o=document.getElementById('gate-ov');if(o)o.remove();}
-if(sessionStorage.getItem('pv_ok')==='2'){document.addEventListener('DOMContentLoaded',unlock);return;}
+if(localStorage.getItem('pv_ok')==='2'){document.addEventListener('DOMContentLoaded',unlock);return;}
 document.addEventListener('DOMContentLoaded',function(){
 var ov=document.createElement('div');ov.id='gate-ov';
 ov.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0f1720;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif';
 ov.innerHTML='<div style="background:#fff;padding:34px 30px;border-radius:14px;max-width:330px;width:90%;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,.45)"><div style="font-size:16px;color:#0f1720;margin-bottom:6px;font-weight:700">БАС · Казахстан</div><div style="font-size:13px;color:#64748b;margin-bottom:16px">Закрытый предпросмотр</div><input id="gpw" type="password" placeholder="Пароль" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;margin-bottom:10px"><button id="ggo" style="width:100%;padding:12px;border:0;border-radius:10px;background:#12506b;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Войти</button><div id="gerr" style="color:#c0392b;font-size:12px;margin-top:8px;height:14px"></div></div>';
 document.body.appendChild(ov);var i=document.getElementById('gpw');i.focus();
-function go(){if(i.value.trim().toLowerCase()===PW){sessionStorage.setItem('pv_ok','2');unlock();}else{document.getElementById('gerr').textContent='Неверный пароль';i.value='';i.focus();}}
+function go(){if(i.value.trim().toLowerCase()===PW){localStorage.setItem('pv_ok','2');unlock();}else{document.getElementById('gerr').textContent='Неверный пароль';i.value='';i.focus();}}
 document.getElementById('ggo').onclick=go;i.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
 });})();
 </script></head>
