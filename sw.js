@@ -1,6 +1,6 @@
-// Service worker БАС · Казахстан — офлайн-кэш демонстрации.
-// Версию поднимать при каждой публикации, чтобы устройство забрало свежую сборку.
-const CACHE = 'bas-kz-v6';
+// Service worker БАС · Казахстан — офлайн-кэш + свежесть при интернете.
+// Версию поднимать при каждой публикации.
+const CACHE = 'bas-kz-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -19,17 +19,29 @@ self.addEventListener('activate', (e) => {
       .then(() => self.clients.claim())
   );
 });
-// Cache-first: всё берём из кэша, сеть — только если чего-то нет.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  const isPage = e.request.mode === 'navigate' ||
+    (e.request.destination === 'document') ||
+    (e.request.headers.get('accept') || '').includes('text/html');
+  if (isPage) {
+    // Страница: сначала сеть (свежая версия), офлайн — из кэша.
+    e.respondWith(
+      fetch(e.request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put('./index.html', copy)).catch(() => {});
+        return res;
+      }).catch(() => caches.match('./index.html').then((h) => h || caches.match('./')))
+    );
+    return;
+  }
+  // Остальное: сначала кэш, потом сеть.
   e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then((hit) => {
-      if (hit) return hit;
-      return fetch(e.request).then((res) => {
+    caches.match(e.request, { ignoreSearch: true }).then((hit) => hit ||
+      fetch(e.request).then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
         return res;
-      }).catch(() => caches.match('./index.html'));
-    })
+      }).catch(() => caches.match('./index.html')))
   );
 });
