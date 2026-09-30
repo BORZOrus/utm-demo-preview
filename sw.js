@@ -1,6 +1,6 @@
 // Service worker БАС · Казахстан — офлайн-кэш + свежесть при интернете.
 // Версию поднимать при каждой публикации.
-const CACHE = 'bas-kz-v7';
+const CACHE = 'bas-kz-v8';
 const ASSETS = [
   './',
   './index.html',
